@@ -1,3 +1,4 @@
+package ProyectoSO;
 import java.util.*;
 import java.util.regex.*;
 
@@ -62,7 +63,8 @@ public class prueba {
             pid = generateAutoId();
             System.out.println("Id asignado: " + pid);
         } else {
-            if (processes.stream().anyMatch(p -> p.getPid().equals(pid))) {
+            final String finalPid = pid;
+            if (processes.stream().anyMatch(p -> p.getPid().equals(finalPid))) {
                 System.out.println("Error: Id ya existe. Operación cancelada.\n");
                 return;
             }
@@ -163,4 +165,17 @@ public class prueba {
 
     private static String generateAutoId() {
         Pattern pat = Pattern.compile("^P(\\d+)$", Pattern.CASE_INSENSITIVE);
-        Set<Integer>
+        Set<Integer> existingIds = new HashSet<>();
+        for (Process p : processes) {
+            Matcher m = pat.matcher(p.getPid());
+            if (m.matches()) {
+                existingIds.add(Integer.parseInt(m.group(1)));
+            }
+        }
+        int id = 1;
+        while (existingIds.contains(id)) {
+            id++;
+        }
+        return "P" + id;
+    }
+}
