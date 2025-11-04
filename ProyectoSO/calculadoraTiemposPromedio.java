@@ -24,8 +24,8 @@ public class calculadoraTiemposPromedio {
         for (Proceso p : procesosCompletados) {
             totalRespuesta += p.getTiempoRespuesta();
             totalEspera += p.getTiempoEspera();
-            totalRetorno += p.getTiempoRetorno();
-            totalEjecucion += p.getTiempoEjecucionTotal();
+            totalRetorno += p.getTiempoEjecucion();
+            totalEjecucion += p.getTiempoEjecucion();
         }
 
         int cantidad = procesosCompletados.size();

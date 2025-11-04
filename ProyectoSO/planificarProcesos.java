@@ -5,6 +5,10 @@ import java.util.Queue;
 public class planificarProcesos {
     private Queue<Proceso> colaProcesosListos;
     private int quantum;
+
+    public int getQuantum() {
+        return quantum;
+    }
     private int tiempoActual;
 
     public planificarProcesos(int quantum) {
@@ -13,17 +17,15 @@ public class planificarProcesos {
         this.tiempoActual = 0;
     }
 
-    // Agrega un proceso a la cola de listos
     public void agregarProceso(Proceso proceso) {
         colaProcesosListos.offer(proceso);
-        System.out.println("✓ Proceso " + proceso.getPid() + " agregado a cola de listos");
+        System.out.println("-- Proceso " + proceso.getPid() + " agregado a cola de listos");
         mostrarCola();
     }
 
-    // Ejecuta Round Robin en CPU
     public void ejecutarRoundRobin(asignarMemoria memoria) {
         if (memoria.estaVacia()) {
-            System.out.println("\n⚠ No hay procesos en memoria para ejecutar.");
+            System.out.println("\nAlerta: No hay procesos en memoria para ejecutar.");
             return;
         }
 
@@ -34,7 +36,6 @@ public class planificarProcesos {
 
         Queue<Proceso> colaCPU = new LinkedList<>();
         
-        // Pasar todos los procesos de memoria a cola de CPU
         while (!memoria.estaVacia()) {
             Proceso p = memoria.removerProceso();
             if (p != null) {
@@ -42,21 +43,18 @@ public class planificarProcesos {
             }
         }
 
-        // Ejecutar Round Robin
         while (!colaCPU.isEmpty()) {
             Proceso procesoActual = colaCPU.poll();
             
-            // Marcar tiempo de inicio en CPU si es la primera vez
             if (!procesoActual.isIniciado()) {
                 procesoActual.setTiempoInicioCPU(tiempoActual);
             }
 
-            System.out.println("⏰ Tiempo: " + tiempoActual + " ms");
-            System.out.println("▶ Ejecutando proceso: " + procesoActual.getPid() + 
+            System.out.println("Tiempo: " + tiempoActual + " ms");
+            System.out.println("Ejecutando proceso: " + procesoActual.getPid() + 
                              " (" + procesoActual.getNombre() + ")");
             System.out.println("  Tiempo restante antes: " + procesoActual.getTiempoEjecucionRestante() + " ms");
 
-            // Ejecutar por quantum o hasta terminar
             int tiempoEjecutado = Math.min(quantum, procesoActual.getTiempoEjecucionRestante());
             procesoActual.ejecutar(tiempoEjecutado);
             tiempoActual += tiempoEjecutado;
@@ -64,15 +62,14 @@ public class planificarProcesos {
             System.out.println("  Tiempo ejecutado: " + tiempoEjecutado + " ms");
             System.out.println("  Tiempo restante después: " + procesoActual.getTiempoEjecucionRestante() + " ms");
 
-            // Verificar si el proceso terminó
             if (procesoActual.isCompletado()) {
                 procesoActual.setTiempoFinalizacion(tiempoActual);
-                System.out.println("✓ Proceso " + procesoActual.getPid() + " COMPLETADO");
+                System.out.println("-- Proceso " + procesoActual.getPid() + " COMPLETADO");
                 System.out.println("  - Tiempo de respuesta: " + procesoActual.getTiempoRespuesta() + " ms");
                 System.out.println("  - Tiempo de espera: " + procesoActual.getTiempoEspera() + " ms");
                 System.out.println("  - Tiempo de retorno: " + procesoActual.getTiempoRetorno() + " ms");
             } else {
-                System.out.println("◀ Proceso " + procesoActual.getPid() + " devuelto a cola (no terminado)");
+                System.out.println("-- Proceso " + procesoActual.getPid() + " devuelto a cola (no terminado)");
                 colaCPU.offer(procesoActual); // Volver a encolar
             }
             System.out.println();
@@ -92,13 +89,13 @@ public class planificarProcesos {
         if (colaProcesosListos.isEmpty()) {
             System.out.println("║ (vacía)                                                        ║");
         } else {
-            System.out.printf("║ %-6s %-20s %-8s %-10s %-10s%n", 
-                    "PID", "Nombre", "Tamaño", "Exec.Total", "Prioridad");
+            System.out.printf("║ %-6s %-20s %-8s %-10s%n", 
+                    "PID", "Nombre", "Tamaño", "Exec.Total");
             System.out.println("╠════════════════════════════════════════════════════════════════╣");
             for (Proceso p : colaProcesosListos) {
-                System.out.printf("║ %-6s %-20s %-8d %-10d %-10d%n",
+                System.out.printf("║ %-6s %-20s %-8d %-10d%n",
                         p.getPid(), p.getNombre(), p.getTamaño(), 
-                        p.getTiempoEjecucionTotal(), p.getPrioridad());
+                        p.getTiempoEjecucionTotal());
             }
         }
         System.out.println("╚════════════════════════════════════════════════════════════════╝\n");
@@ -107,10 +104,10 @@ public class planificarProcesos {
     public boolean eliminarProceso(String pid) {
         boolean removido = colaProcesosListos.removeIf(p -> p.getPid().equals(pid));
         if (removido) {
-            System.out.println("✓ Proceso " + pid + " eliminado de cola de listos");
+            System.out.println("-- Proceso " + pid + " eliminado de cola de listos");
             mostrarCola();
         } else {
-            System.out.println("✗ Proceso " + pid + " no encontrado en cola de listos");
+            System.out.println("x Proceso " + pid + " no encontrado en cola de listos");
         }
         return removido;
     }
