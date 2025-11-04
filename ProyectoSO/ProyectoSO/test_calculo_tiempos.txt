@@ -1,0 +1,29 @@
+Ejemplo de verificación de cálculo de tiempos:
+
+Supongamos:
+- Proceso P1: llega en tiempo 0, duración 6ms
+- Proceso P2: llega en tiempo 2, duración 4ms  
+- Quantum = 3ms
+
+Cronología esperada:
+t=0: P1 llega, va a cola listos, luego a memoria, empieza CPU (primera_subida=0)
+t=0-3: P1 ejecuta 3ms (restante=3)
+t=3: P1 termina quantum, va a cola listos
+t=2: P2 llega, va a cola listos
+t=3: P2 va a memoria, empieza CPU (primera_subida=3) 
+t=3-6: P2 ejecuta 3ms (restante=1)
+t=6: P2 termina quantum, va a cola listos
+t=6: P1 vuelve a memoria, sube a CPU (ultima_subida=6, tiempo_acum_anterior=3)
+t=6-9: P1 ejecuta 3ms (restante=0, completo)
+t=9: P2 vuelve a memoria, sube a CPU (ultima_subida=9, tiempo_acum_anterior=3)  
+t=9-10: P2 ejecuta 1ms (restante=0, completo)
+
+Cálculos esperados para P1:
+- trespuesta = 0 - 0 = 0
+- tejecucion = 9 - 0 = 9  
+- tespera = 6 - 0 - 3 = 3
+
+Cálculos esperados para P2:
+- trespuesta = 3 - 2 = 1
+- tejecucion = 10 - 2 = 8
+- tespera = 9 - 2 - 3 = 4
