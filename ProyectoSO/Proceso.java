@@ -63,19 +63,16 @@ public class Proceso {
     }
 
     public int getTiempoRespuesta() {
-        // trespuesta = tiempo sube primera vez a cpu - tiempo de llegada
         if (tiempoInicioCPU == -1) return -1;
         return tiempoInicioCPU - tiempoLlegada;
     }
 
     public int getTiempoEjecucion() {
-        // tejecucion = tiempo en que termina su ejecucion - tiempo de llegada
         if (tiempoFinalizacion == -1) return -1;
         return tiempoFinalizacion - tiempoLlegada;
     }
 
     public int getTiempoEspera() {
-        // tespera = tiempo que subio ultima vez a cpu - tiempo de llegada - tiempo de ejecucion en cpu entre esos dos tiempos
         if (tiempoUltimaSubidaCPU == -1) return -1;
         return tiempoUltimaSubidaCPU - tiempoLlegada - tiempoEjecucionAcumulado;
     }
