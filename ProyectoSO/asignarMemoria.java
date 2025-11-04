@@ -13,31 +13,28 @@ public class asignarMemoria {
         this.memoriaUsada = 0;
     }
 
-    // Intenta agregar un proceso a memoria (FIFO)
     public boolean agregarProceso(Proceso proceso) {
         if (memoriaUsada + proceso.getTamaño() <= limiteMemoria) {
             colaMemoria.offer(proceso);
             memoriaUsada += proceso.getTamaño();
-            System.out.println("✓ Proceso " + proceso.getPid() + " cargado en memoria (" + 
+            System.out.println("-- Proceso " + proceso.getPid() + " cargado en memoria (" + 
                              proceso.getTamaño() + " unidades)");
             return true;
         } else {
-            System.out.println("✗ No hay espacio suficiente en memoria para " + proceso.getPid());
+            System.out.println("x No hay espacio suficiente en memoria para " + proceso.getPid());
             return false;
         }
     }
 
-    // Remueve el siguiente proceso de memoria (FIFO - primero en entrar, primero en salir)
     public Proceso removerProceso() {
         Proceso proceso = colaMemoria.poll();
         if (proceso != null) {
             memoriaUsada -= proceso.getTamaño();
-            System.out.println("✓ Proceso " + proceso.getPid() + " removido de memoria");
+            System.out.println("-- Proceso " + proceso.getPid() + " removido de memoria");
         }
         return proceso;
     }
 
-    // Obtiene el siguiente proceso sin removerlo
     public Proceso verSiguiente() {
         return colaMemoria.peek();
     }
